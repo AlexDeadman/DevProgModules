@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+}
+
+group 'ru.lostman'
+version '0.0.3'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    implementation 'com.google.code.gson:gson:2.8.6'
+}
+
+test {
+    useJUnitPlatform()
+}
