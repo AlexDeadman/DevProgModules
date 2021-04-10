@@ -44,6 +44,15 @@ public class GameServer {
 
     // ----------------------------------------------------------------------------------------------------
 
+    public World getWorldById(int worldId) {
+        return this.worlds
+            .stream()
+            .dropWhile(world -> world.getId() != worldId)
+            .findFirst()
+            .get();
+//        TODO мир может быть не найден
+    }
+
     public void updateServer() {
         if (this.serverTick == 1) {
             System.out.print("Game was started");

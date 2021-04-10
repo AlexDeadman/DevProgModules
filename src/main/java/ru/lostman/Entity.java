@@ -48,11 +48,7 @@ public class Entity {
 
         this.world = GameServer
             .getInstance()
-            .getWorlds()
-            .stream()
-            .dropWhile(world -> world.getId() != this.worldId)
-            .findFirst()
-            .get();
+            .getWorldById(worldId);
     }
 
     public Entity(
@@ -134,13 +130,23 @@ public class Entity {
 
     private Entity searchTarget() {
         List<Entity> sortedEntities =
-            World.getEntitiesNearEntity(this, this.world.getEntities()); // TODO FIX NPE PLS
+            World.getEntitiesNearEntity(this, this.world.getEntities());
 
-        // в дальнейшем можно будет возвращать несколько целей
-        return sortedEntities.get(0);
+        if (sortedEntities.size() < 1) {
+            return null;
+        } else {
+            return sortedEntities.get(0);
+        }
     }
 
     public void update() {
+        if(this.world == null) {
+            this.world = GameServer
+                .getInstance()
+                .getWorldById(worldId);
+//            TODO worldId может остаться -1
+        }
+
         if (this.agressive) {
             if (this.target == null) {
                 target = searchTarget();
