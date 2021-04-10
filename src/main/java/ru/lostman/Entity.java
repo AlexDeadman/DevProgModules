@@ -12,7 +12,8 @@ public class Entity {
     protected double attackDistance;
     protected double visionRange;
     protected Entity target;
-    protected World world;
+    protected int worldId;
+    protected transient World world;
 
     protected static int idCounter = 1;
     protected final long id;
@@ -29,7 +30,7 @@ public class Entity {
             double attackDistance,
             double visionRange,
             boolean agressive,
-            World world
+            int worldId
     ) {
         this.title = title;
         this.posX = posX;
@@ -40,7 +41,15 @@ public class Entity {
         this.attackDistance = attackDistance;
         this.visionRange = visionRange;
         this.agressive = agressive;
-        this.world = world;
+        this.worldId = worldId;
+
+        this.world = GameServer
+                .getInstance()
+                .getWorlds()
+                .stream()
+                .dropWhile(world -> world.getId() != this.worldId)
+                .findFirst()
+                .orElseGet(null);
 
         this.id = idCounter++;
     }
