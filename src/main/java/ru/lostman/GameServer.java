@@ -12,10 +12,10 @@ public class GameServer {
     private final int tickDelay;
 
     public GameServer(
-            String ip,
-            int difficulty,
-            List<World> worlds,
-            int tickDelay
+        String ip,
+        int difficulty,
+        List<World> worlds,
+        int tickDelay
     ) {
         this.ip = ip;
 
@@ -34,12 +34,12 @@ public class GameServer {
     @Override
     public String toString() {
         return "GameServer{" +
-                "ip='" + ip + '\'' +
-                ", difficulty=" + difficulty +
-                ", worlds=" + worlds +
-                ", serverTick=" + serverTick +
-                ", tickDelay=" + tickDelay +
-                '}';
+            "ip='" + ip + '\'' +
+            ", difficulty=" + difficulty +
+            ", worlds=" + worlds +
+            ", serverTick=" + serverTick +
+            ", tickDelay=" + tickDelay +
+            '}';
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -62,26 +62,31 @@ public class GameServer {
 
     public void printEntities() {
         for (World world : worlds) {
-            System.out.print( "\n\n┬──────┬───────────────────┬────────────┬─────────────────────┬──────────────────────┬\n" +
-                                  "│  ID  │       Title       │   Health   │   Position X ; Z    │       Nickname       │\n" +
-                                  "├──────┼───────────────────┼────────────┼─────────────────────┼──────────────────────┤\n"
+            System.out.print(
+                """
+
+
+                ┬──────┬───────────────────┬────────────┬─────────────────────┬──────────────────────┬
+                │  ID  │       Title       │   Health   │   Position X ; Z    │       Nickname       │
+                ├──────┼───────────────────┼────────────┼─────────────────────┼──────────────────────┤
+                """
             );
 
             for (Entity entity : world.getEntities()) {
                 System.out.printf("│ %-4d │ %-17s │ %-10d │ %-9.2f;%9.2f ",
-                        entity.id,
-                        entity.title,
-                        entity.health,
-                        entity.posX,
-                        entity.posZ
+                    entity.id,
+                    entity.title,
+                    entity.health,
+                    entity.posX,
+                    entity.posZ
                 );
                 if (entity instanceof Player) {
                     System.out.printf("│ %-20s │\n", ((Player) entity).getNickname());
                 } else {
-                     System.out.print("│                      │\n");
+                    System.out.print("│                      │\n");
                 }
             }
-            System.out.println(    "┴──────┴───────────────────┴────────────┴─────────────────────┴──────────────────────┴\n");
+            System.out.println("┴──────┴───────────────────┴────────────┴─────────────────────┴──────────────────────┴\n");
         }
     }
 

@@ -3,34 +3,37 @@ package ru.lostman;
 import java.util.List;
 
 public class Entity {
-    protected String title;
-    protected double posX;
-    protected double posZ;
-    protected int health;
-    protected int maxHealth;
-    protected int attackDamage;
-    protected double attackDistance;
-    protected double visionRange;
-    protected Entity target;
-    protected int worldId;
-    protected transient World world;
+    protected String title = "UnknownEntity";
+    protected double posX = 0.0;
+    protected double posZ = 0.0;
+    protected int health = 0;
+    protected int maxHealth = 100;
+    protected int attackDamage = 0;
+    protected double attackDistance = 0.0;
+    protected double visionRange = 10.0;
+    protected Entity target = null;
+    protected int worldId = -1;
+    protected transient World world = null;
 
     protected static int idCounter = 1;
-    protected final long id;
+    protected final long id = idCounter++;
 
     private boolean agressive;
 
+    public Entity() {
+    }
+
     public Entity(
-            String title,
-            double posX,
-            double posZ,
-            int health,
-            int maxHealth,
-            int attackDamage,
-            double attackDistance,
-            double visionRange,
-            boolean agressive,
-            int worldId
+        String title,
+        double posX,
+        double posZ,
+        int health,
+        int maxHealth,
+        int attackDamage,
+        double attackDistance,
+        double visionRange,
+        boolean agressive,
+        int worldId
     ) {
         this.title = title;
         this.posX = posX;
@@ -44,31 +47,54 @@ public class Entity {
         this.worldId = worldId;
 
         this.world = GameServer
-                .getInstance()
-                .getWorlds()
-                .stream()
-                .dropWhile(world -> world.getId() != this.worldId)
-                .findFirst()
-                .orElseGet(null);
+            .getInstance()
+            .getWorlds()
+            .stream()
+            .dropWhile(world -> world.getId() != this.worldId)
+            .findFirst()
+            .get();
+    }
 
-        this.id = idCounter++;
+    public Entity(
+        String title,
+        double posX,
+        double posZ,
+        int health,
+        int maxHealth,
+        int attackDamage,
+        double attackDistance,
+        double visionRange,
+        boolean agressive,
+        World world
+    ) {
+        this.title = title;
+        this.posX = posX;
+        this.posZ = posZ;
+        this.health = health;
+        this.maxHealth = maxHealth;
+        this.attackDamage = attackDamage;
+        this.attackDistance = attackDistance;
+        this.visionRange = visionRange;
+        this.agressive = agressive;
+        this.world = world;
+        this.worldId = world.getId();
     }
 
     @Override
     public String toString() {
         return "Entity{" +
-                "title='" + title + '\'' +
-                ", posX=" + posX +
-                ", posZ=" + posZ +
-                ", health=" + health +
-                ", maxHealth=" + maxHealth +
-                ", attackDamage=" + attackDamage +
-                ", attackDistance=" + attackDistance +
-                ", visibilityRange=" + visionRange +
-                ", world=" + world +
-                ", id=" + id +
-                ", agressive=" + agressive +
-                '}';
+            "title='" + title + '\'' +
+            ", posX=" + posX +
+            ", posZ=" + posZ +
+            ", health=" + health +
+            ", maxHealth=" + maxHealth +
+            ", attackDamage=" + attackDamage +
+            ", attackDistance=" + attackDistance +
+            ", visibilityRange=" + visionRange +
+            ", world=" + world.getWorldName() +
+            ", worldId=" + worldId +
+            ", agressive=" + agressive +
+            '}';
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -98,9 +124,9 @@ public class Entity {
             }
 
             System.out.printf(
-                    "\n\n%s was slain by %s (%s has %d HP; server tick: %d)",
-                    victim, killer, killer, this.health, GameServer.getInstance().getServerTick()
-                    );
+                "\n\n%s was slain by %s (%s has %d HP; server tick: %d)",
+                victim, killer, killer, this.health, GameServer.getInstance().getServerTick()
+            );
 
             this.target = null;
         }
@@ -108,7 +134,7 @@ public class Entity {
 
     private Entity searchTarget() {
         List<Entity> sortedEntities =
-                World.getEntitiesNearEntity(this, this.world.getEntities());
+            World.getEntitiesNearEntity(this, this.world.getEntities()); // TODO FIX NPE PLS
 
         // в дальнейшем можно будет возвращать несколько целей
         return sortedEntities.get(0);
@@ -193,47 +219,62 @@ public class Entity {
         return agressive;
     }
 
-    public void setTitle(String title) {
+    public Entity setTitle(String title) {
         this.title = title;
+        return this;
     }
 
-    public void setPosX(double posX) {
+    public Entity setPosX(double posX) {
         this.posX = posX;
+        return this;
     }
 
-    public void setPosZ(double posZ) {
+    public Entity setPosZ(double posZ) {
         this.posZ = posZ;
+        return this;
     }
 
-    public void setHealth(int health) {
+    public Entity setHealth(int health) {
         this.health = health;
+        return this;
     }
 
-    public void setMaxHealth(int maxHealth) {
+    public Entity setMaxHealth(int maxHealth) {
         this.maxHealth = maxHealth;
+        return this;
     }
 
-    public void setAttackDamage(int attackDamage) {
+    public Entity setAttackDamage(int attackDamage) {
         this.attackDamage = attackDamage;
+        return this;
     }
 
-    public void setAgressive(boolean agressive) {
-        this.agressive = agressive;
-    }
-
-    public void setAttackDistance(double attackDistance) {
+    public Entity setAttackDistance(double attackDistance) {
         this.attackDistance = attackDistance;
+        return this;
     }
 
-    public void setVisionRange(double visionRange) {
+    public Entity setVisionRange(double visionRange) {
         this.visionRange = visionRange;
+        return this;
     }
 
-    public void setTarget(Entity target) {
-        this.target = target;
+    public Entity setWorldId(int worldId) {
+        this.worldId = worldId;
+        return this;
     }
 
-    public void setWorld(World world) {
+    public Entity setWorld(World world) {
         this.world = world;
+        return setWorldId(world.getId());
+    }
+
+    public static void setIdCounter(int idCounter) {
+        Entity.idCounter = idCounter;
+    }
+
+    public Entity setAgressive(boolean agressive) {
+        this.agressive = agressive;
+        return this;
     }
 }

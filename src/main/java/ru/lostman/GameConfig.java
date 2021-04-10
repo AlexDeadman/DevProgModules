@@ -10,12 +10,12 @@ public class GameConfig {
     @Override
     public String toString() {
         return "GameConfig{" +
-                "ip='" + ip + '\'' +
-                ", port=" + port +
-                ", difficulty=" + difficulty +
-                ", updatePeriod=" + tickDelay +
-                ", savePeriod=" + savePeriod +
-                '}';
+            "ip='" + ip + '\'' +
+            ", port=" + port +
+            ", difficulty=" + difficulty +
+            ", updatePeriod=" + tickDelay +
+            ", savePeriod=" + savePeriod +
+            '}';
     }
 
     public String getIp() {

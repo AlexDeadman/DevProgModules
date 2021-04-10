@@ -17,10 +17,10 @@ public class World {
     @Override
     public String toString() {
         return "World{" +
-                "id=" + id +
-                ", worldName='" + worldName + '\'' +
-                ", entities=" + entities +
-                '}';
+            "id=" + id +
+            ", worldName='" + worldName + '\'' +
+            ", entities=" + entities +
+            '}';
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -32,29 +32,29 @@ public class World {
 
     public static double getDistanceToEntity(double x, double z, Entity other) {
         return Math.sqrt(
-                Math.pow((x - other.getPosX()), 2) + Math.pow((z - other.getPosZ()), 2)
+            Math.pow((x - other.getPosX()), 2) + Math.pow((z - other.getPosZ()), 2)
         );
     }
 
     public static List<Entity> getEntitiesByPosition(double x, double z, List<Entity> entities) {
         Map<Entity, Double> entitiesWithDistance =
-                entities.stream().collect(
-                        Collectors.toMap(Function.identity(), ent -> getDistanceToEntity(x, z, ent))
-                );
+            entities.stream().collect(
+                Collectors.toMap(Function.identity(), ent -> getDistanceToEntity(x, z, ent))
+            );
         return entitiesWithDistance
-                .entrySet()
-                .stream()
-                .sorted(Comparator.comparingDouble(Map.Entry::getValue))
-                .map(Map.Entry::getKey)
-                .filter(ent -> !ent.isAgressive())
-                .collect(Collectors.toList());
+            .entrySet()
+            .stream()
+            .sorted(Comparator.comparingDouble(Map.Entry::getValue))
+            .map(Map.Entry::getKey)
+            .filter(ent -> !ent.isAgressive())
+            .collect(Collectors.toList());
     }
 
     public static List<Entity> getEntitiesNearEntity(Entity entity, List<Entity> entities) {
         return getEntitiesByPosition(entity.getPosX(), entity.getPosZ(), entities)
-                .stream()
-                .filter(ent -> !ent.equals(entity))
-                .collect(Collectors.toList());
+            .stream()
+            .filter(ent -> !ent.equals(entity))
+            .collect(Collectors.toList());
     }
 
     // ----------------------------------------------------------------------------------------------------

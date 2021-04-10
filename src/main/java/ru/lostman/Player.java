@@ -1,48 +1,61 @@
 package ru.lostman;
 
-public class Player extends Entity{
-    private String nickname;
+public class Player extends Entity {
+    private String nickname = "UnknownPlayer";
 
-    public Player(String nickname,
-                  double posX,
-                  double posZ,
-                  int health,
-                  int maxHealth,
-                  int attackDamage,
-                  double attackDistance,
-                  double visibilityRange,
-                  World world
+    public Player() {
+    }
+
+    public Player(
+        double posX,
+        double posZ,
+        int health,
+        int maxHealth,
+        int attackDamage,
+        double attackDistance,
+        double visionRange,
+        int worldId,
+        String nickname
     ) {
-        super("Player",
-                posX,
-                posZ,
-                health,
-                maxHealth,
-                attackDamage,
-                attackDistance,
-                visibilityRange,
-                false,
-                world
-
+        super(
+            "Player",
+            posX,
+            posZ,
+            health,
+            maxHealth,
+            attackDamage,
+            attackDistance,
+            visionRange,
+            false,
+            worldId
         );
         this.nickname = nickname;
     }
 
-    @Override
-    public String toString() {
-        return "Player{" +
-                "title='" + title + '\'' +
-                ", posX=" + posX +
-                ", posZ=" + posZ +
-                ", health=" + health +
-                ", maxHealth=" + maxHealth +
-                ", attackDamage=" + attackDamage +
-                ", attackDistance=" + attackDistance +
-                ", visibilityRange=" + visionRange +
-                ", world=" + world +
-                ", id=" + id +
-                ", nickname='" + nickname + '\'' +
-                '}';
+    public Player(
+        double posX,
+        double posZ,
+        int health,
+        int maxHealth,
+        int attackDamage,
+        double attackDistance,
+        double visionRange,
+        World world,
+        String nickname
+    ) {
+        super(
+            "Player",
+            posX,
+            posZ,
+            health,
+            maxHealth,
+            attackDamage,
+            attackDistance,
+            visionRange,
+            false,
+            world
+        );
+        this.nickname = nickname;
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -50,7 +63,7 @@ public class Player extends Entity{
     @Override
     public void update() {
         super.update();
-        if(GameServer.getInstance().getServerTick() % 2 == 0) {
+        if (GameServer.getInstance().getServerTick() % 2 == 0) {
             if (this.health < this.maxHealth) {
                 this.health++;
             }
@@ -63,7 +76,8 @@ public class Player extends Entity{
         return nickname;
     }
 
-    public void setNickname(String nickname) {
+    public Player setNickname(String nickname) {
         this.nickname = nickname;
+        return this;
     }
 }
