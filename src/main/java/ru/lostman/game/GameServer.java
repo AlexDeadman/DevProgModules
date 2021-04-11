@@ -1,48 +1,33 @@
-package ru.lostman;
+package ru.lostman.game;
 
+import ru.lostman.FileUtils;
+import ru.lostman.entity.Entity;
+import ru.lostman.entity.Player;
+import ru.lostman.world.World;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameServer {
     private static GameServer instance;
-
-    private String ip;
-    private int difficulty;
-    private final List<World> worlds;
+    private List<World> worlds = new ArrayList<>();
+    private GameConfig config = new GameConfig();
     private int serverTick = 1;
-    private final int tickDelay;
 
-    public GameServer(
-        String ip,
-        int difficulty,
-        List<World> worlds,
-        int tickDelay
-    ) {
-        this.ip = ip;
-
-        if (difficulty < 1) {
-            this.difficulty = 1;
-        } else {
-            this.difficulty = Math.min(difficulty, 3);
-        }
-
-        this.worlds = worlds;
-        this.tickDelay = tickDelay;
-
+    public GameServer() {
         instance = this;
     }
 
     @Override
     public String toString() {
         return "GameServer{" +
-            "ip='" + ip + '\'' +
-            ", difficulty=" + difficulty +
-            ", worlds=" + worlds +
-            ", serverTick=" + serverTick +
-            ", tickDelay=" + tickDelay +
+            "worlds=" + worlds +
+            ", config=" + config +
             '}';
     }
 
-    // ----------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------
 
     public World getWorldById(int worldId) {
         return this.worlds
@@ -62,7 +47,7 @@ public class GameServer {
         worlds.forEach(World::update);
 
         try {
-            Thread.sleep(this.tickDelay);
+            Thread.sleep(this.config.getTickDelay());
             this.serverTick++;
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -83,11 +68,11 @@ public class GameServer {
 
             for (Entity entity : world.getEntities()) {
                 System.out.printf("│ %-4d │ %-17s │ %-10d │ %-9.2f;%9.2f ",
-                    entity.id,
-                    entity.title,
-                    entity.health,
-                    entity.posX,
-                    entity.posZ
+                    entity.getId(),
+                    entity.getTitle(),
+                    entity.getHealth(),
+                    entity.getPosX(),
+                    entity.getPosZ()
                 );
                 if (entity instanceof Player) {
                     System.out.printf("│ %-20s │\n", ((Player) entity).getNickname());
@@ -99,33 +84,40 @@ public class GameServer {
         }
     }
 
+    public void startGame(int tickQuantity, String resultPath) throws IOException {
+        for (int i = 0; i <= tickQuantity; i++) {
+            this.updateServer();
+            if (i % this.config.getSavePeriod() == 0) {
+                FileUtils.saveWorlds(resultPath, this.worlds);
+            }
+        }
+    }
+
     // ----------------------------------------------------------------------------------------------------
 
     public static GameServer getInstance() {
         return instance;
     }
 
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public int getDifficulty() {
-        return difficulty;
-    }
-
-    public void setDifficulty(int difficulty) {
-        this.difficulty = difficulty;
-    }
-
     public List<World> getWorlds() {
         return worlds;
     }
 
+    public GameConfig getConfig() {
+        return config;
+    }
+
     public int getServerTick() {
         return serverTick;
+    }
+
+    public GameServer setWorlds(List<World> worlds) {
+        this.worlds = worlds;
+        return this;
+    }
+
+    public GameServer setConfig(GameConfig config) {
+        this.config = config;
+        return this;
     }
 }

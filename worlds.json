@@ -1,11 +1,11 @@
 {
-  "list": [
+  "worlds": [
     {
       "id": 0,
-      "worldName": "Earth",
+      "title": "Earth",
       "entities": [
         {
-          "title": "Woman",
+          "title": "Woman...",
           "posX": 1.0,
           "posZ": 1.0,
           "health": 100,
@@ -31,7 +31,7 @@
           "agressive": false
         },
         {
-          "nickname": "TRUE MAN",
+          "nickname": "True_Man_420",
           "title": "Player",
           "posX": 1.1,
           "posZ": 1.1,

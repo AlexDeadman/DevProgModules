@@ -1,24 +1,29 @@
-package ru.lostman;
+package ru.lostman.world;
+
+import ru.lostman.entity.Entity;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class World {
-    private int id;
-    private String worldName;
-    private List<Entity> entities;
+    private int id = -2;
+    private String title = "Unknown world";
+    private List<Entity> entities = new ArrayList<>();
 
-    public World(int id, String worldName) {
+    public World() {
+    }
+
+    public World(int id, String title) {
         this.id = id;
-        this.worldName = worldName;
+        this.title = title;
     }
 
     @Override
     public String toString() {
         return "World{" +
             "id=" + id +
-            ", worldName='" + worldName + '\'' +
+            ", worldName='" + title + '\'' +
             ", entities=" + entities +
             '}';
     }
@@ -27,7 +32,7 @@ public class World {
 
     public void update() {
         entities.forEach(Entity::update);
-        entities.removeIf(ent -> ent.health <= 0);
+        entities.removeIf(ent -> ent.getHealth() <= 0);
     }
 
     public static double getDistanceToEntity(double x, double z, Entity other) {
@@ -63,23 +68,26 @@ public class World {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getWorldName() {
-        return worldName;
-    }
-
-    public void setWorldName(String worldName) {
-        this.worldName = worldName;
+    public String getTitle() {
+        return title;
     }
 
     public List<Entity> getEntities() {
         return entities;
     }
 
-    public void setEntities(List<Entity> entities) {
+    public World setId(int id) {
+        this.id = id;
+        return this;
+    }
+
+    public World setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public World setEntities(List<Entity> entities) {
         this.entities = entities;
+        return this;
     }
 }

@@ -1,4 +1,7 @@
-package ru.lostman;
+package ru.lostman.entity;
+
+import ru.lostman.game.GameServer;
+import ru.lostman.world.World;
 
 import java.util.List;
 
@@ -46,9 +49,7 @@ public class Entity {
         this.agressive = agressive;
         this.worldId = worldId;
 
-        this.world = GameServer
-            .getInstance()
-            .getWorldById(worldId);
+        this.world = GameServer.getInstance().getWorldById(worldId);
     }
 
     public Entity(
@@ -87,7 +88,7 @@ public class Entity {
             ", attackDamage=" + attackDamage +
             ", attackDistance=" + attackDistance +
             ", visibilityRange=" + visionRange +
-            ", world=" + world.getWorldName() +
+            ", world=" + world.getTitle() +
             ", worldId=" + worldId +
             ", agressive=" + agressive +
             '}';
@@ -96,7 +97,7 @@ public class Entity {
     // ----------------------------------------------------------------------------------------------------
 
     public void attack(Entity target) {
-        target.health -= this.attackDamage + 0.5 * GameServer.getInstance().getDifficulty();
+        target.health -= this.attackDamage + 0.5 * GameServer.getInstance().getConfig().getDifficulty();
 
         if (target instanceof Player) {
             if (target.health > 0) {

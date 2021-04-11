@@ -1,4 +1,7 @@
-package ru.lostman;
+package ru.lostman.entity;
+
+import ru.lostman.game.GameServer;
+import ru.lostman.world.World;
 
 public class Player extends Entity {
     private String nickname = "UnknownPlayer";

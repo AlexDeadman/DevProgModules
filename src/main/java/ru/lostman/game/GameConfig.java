@@ -1,4 +1,4 @@
-package ru.lostman;
+package ru.lostman.game;
 
 public class GameConfig {
     private String ip = "127.0.0.1";
@@ -6,6 +6,23 @@ public class GameConfig {
     private int difficulty = 2;
     private int tickDelay = 1000;
     private int savePeriod = 5;
+
+    public GameConfig() {
+    }
+
+    public GameConfig(
+        String ip,
+        int port,
+        int difficulty,
+        int tickDelay,
+        int savePeriod
+    ) {
+        this.ip = ip;
+        this.port = port;
+        this.difficulty = difficulty;
+        this.tickDelay = tickDelay;
+        this.savePeriod = savePeriod;
+    }
 
     @Override
     public String toString() {

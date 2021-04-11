@@ -1,0 +1,7 @@
+{
+  "ip": "192.168.0.10",
+  "port": 34561,
+  "difficulty": 1,
+  "tickDelay": 500,
+  "savePeriod": 5
+}

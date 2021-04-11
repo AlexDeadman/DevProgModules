@@ -1,36 +1,34 @@
 package ru.lostman;
 
-import com.google.gson.Gson;
+import ru.lostman.game.GameConfig;
+import ru.lostman.game.GameServer;
+import ru.lostman.world.World;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
+        GameServer coolServer = new GameServer();
 
-//        TODO вынести обработку файлов в FileUtils
-
-        String jsonWorlds = Files.readString(Paths.get("worlds.json"));
-
-        List<World> epicWorlds = new Gson().fromJson(jsonWorlds, WorldList.class).list;
-
-        GameServer coolServer = new GameServer(
-            "127.0.0.1",
-            1,
-            epicWorlds,
-            500
-        );
-
-        coolServer.printEntities();
-
-//        TODO засофткодить количество тиков
-        for (int i = 0; i <= 30; i++) {
-            coolServer.updateServer();
+        List<World> worlds = FileUtils.loadWorlds("worlds.json");
+        if (worlds == null) {
+            System.out.println("Не удалось загрузить миры");
+            return;
         }
+        coolServer.setWorlds(worlds);
+        GameConfig gameConfig = FileUtils.loadGameConfig("game_config.json");
+        if (gameConfig == null) {
+            System.out.println("Не удалось загрузить конфиг");
+            return;
+        }
+        coolServer.setConfig(gameConfig);
 
         coolServer.printEntities();
+        coolServer.startGame(30, "worlds_result.json");
+        coolServer.printEntities();
+
+        FileUtils.saveGameConfig("game_config.json", GameServer.getInstance().getConfig());
     }
 }
