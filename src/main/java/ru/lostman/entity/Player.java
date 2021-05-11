@@ -17,32 +17,6 @@ public class Player extends Entity {
         int attackDamage,
         double attackDistance,
         double visionRange,
-        int worldId,
-        String nickname
-    ) {
-        super(
-            "Player",
-            posX,
-            posZ,
-            health,
-            maxHealth,
-            attackDamage,
-            attackDistance,
-            visionRange,
-            false,
-            worldId
-        );
-        this.nickname = nickname;
-    }
-
-    public Player(
-        double posX,
-        double posZ,
-        int health,
-        int maxHealth,
-        int attackDamage,
-        double attackDistance,
-        double visionRange,
         World world,
         String nickname
     ) {
@@ -57,6 +31,32 @@ public class Player extends Entity {
             visionRange,
             false,
             world
+        );
+        this.nickname = nickname;
+    }
+
+    public Player(
+            double posX,
+            double posZ,
+            int health,
+            int maxHealth,
+            int attackDamage,
+            double attackDistance,
+            double visionRange,
+            int worldId,
+            String nickname
+    ) {
+        super(
+                "Player",
+                posX,
+                posZ,
+                health,
+                maxHealth,
+                attackDamage,
+                attackDistance,
+                visionRange,
+                false,
+                worldId
         );
         this.nickname = nickname;
     }

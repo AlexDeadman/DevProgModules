@@ -60,14 +60,14 @@ public class GameServer {
                 """
 
 
-                ┬──────┬───────────────────┬────────────┬─────────────────────┬──────────────────────┬
-                │  ID  │       Title       │   Health   │   Position X ; Z    │       Nickname       │
-                ├──────┼───────────────────┼────────────┼─────────────────────┼──────────────────────┤
+                --------------------------------------------------------------------------------------
+                |  ID  |       Title       |   Health   |   Position  X ; Z   |       Nickname       |
+                |----- + ----------------- + ---------- + ------------------- + ---------------------|
                 """
             );
 
             for (Entity entity : world.getEntities()) {
-                System.out.printf("│ %-4d │ %-17s │ %-10d │ %-9.2f;%9.2f ",
+                System.out.printf("| %-4d | %-17s | %-10d | %-9.2f;%9.2f ",
                     entity.getId(),
                     entity.getTitle(),
                     entity.getHealth(),
@@ -75,12 +75,12 @@ public class GameServer {
                     entity.getPosZ()
                 );
                 if (entity instanceof Player) {
-                    System.out.printf("│ %-20s │\n", ((Player) entity).getNickname());
+                    System.out.printf("| %-20s |\n", ((Player) entity).getNickname());
                 } else {
-                    System.out.print("│                      │\n");
+                    System.out.print("|                      |\n");
                 }
             }
-            System.out.println("┴──────┴───────────────────┴────────────┴─────────────────────┴──────────────────────┴\n");
+            System.out.println("--------------------------------------------------------------------------------------\n");
         }
     }
 

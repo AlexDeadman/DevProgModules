@@ -36,32 +36,6 @@ public class Entity {
         double attackDistance,
         double visionRange,
         boolean agressive,
-        int worldId
-    ) {
-        this.title = title;
-        this.posX = posX;
-        this.posZ = posZ;
-        this.health = health;
-        this.maxHealth = maxHealth;
-        this.attackDamage = attackDamage;
-        this.attackDistance = attackDistance;
-        this.visionRange = visionRange;
-        this.agressive = agressive;
-        this.worldId = worldId;
-
-        this.world = GameServer.getInstance().getWorldById(worldId);
-    }
-
-    public Entity(
-        String title,
-        double posX,
-        double posZ,
-        int health,
-        int maxHealth,
-        int attackDamage,
-        double attackDistance,
-        double visionRange,
-        boolean agressive,
         World world
     ) {
         this.title = title;
@@ -75,6 +49,32 @@ public class Entity {
         this.agressive = agressive;
         this.world = world;
         this.worldId = world.getId();
+    }
+
+    public Entity(
+            String title,
+            double posX,
+            double posZ,
+            int health,
+            int maxHealth,
+            int attackDamage,
+            double attackDistance,
+            double visionRange,
+            boolean agressive,
+            int worldId
+    ) {
+        this(
+                title,
+                posX,
+                posZ,
+                health,
+                maxHealth,
+                attackDamage,
+                attackDistance,
+                visionRange,
+                agressive,
+                GameServer.getInstance().getWorldById(worldId)
+        );
     }
 
     @Override
