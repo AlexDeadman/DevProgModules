@@ -6,15 +6,21 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class GameConnection {
-    private String address;
-    private int port;
-    private String database;
-    private String user;
-    private String password;
+    private final String address;
+    private final int port;
+    private final String database;
+    private final String user;
+    private final String password;
 
     private MysqlDataSource source;
 
-    public GameConnection(String address, int port, String database, String user, String password) {
+    public GameConnection(
+            String address,
+            int port,
+            String database,
+            String user,
+            String password
+    ) {
         this.address = address;
         this.port = port;
         this.database = database;
@@ -22,8 +28,19 @@ public class GameConnection {
         this.password = password;
     }
 
-    public GameConnection(String address, String database, String user, String password) {
-        this(address, 3306, database, user, password);
+    public GameConnection(
+            String address,
+            String database,
+            String user,
+            String password
+    ) {
+        this(
+                address,
+                3306,
+                database,
+                user,
+                password
+        );
     }
 
     public Connection getConnection() throws SQLException {
