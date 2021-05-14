@@ -1,8 +1,8 @@
-package ru.lostman.world;
+package ru.lostman.dpm.world;
 
 import com.google.gson.*;
-import ru.lostman.entity.Entity;
-import ru.lostman.entity.Player;
+import ru.lostman.dpm.entity.Entity;
+import ru.lostman.dpm.entity.Player;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

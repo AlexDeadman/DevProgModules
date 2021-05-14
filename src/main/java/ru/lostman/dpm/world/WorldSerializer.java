@@ -1,8 +1,8 @@
-package ru.lostman.world;
+package ru.lostman.dpm.world;
 
 import com.google.gson.*;
-import ru.lostman.entity.Entity;
-import ru.lostman.entity.Player;
+import ru.lostman.dpm.entity.Entity;
+import ru.lostman.dpm.entity.Player;
 
 import java.lang.reflect.Type;
 
@@ -21,11 +21,7 @@ public class WorldSerializer implements JsonSerializer<World> {
         JsonArray entities = new JsonArray();
         result.add("entities", entities);
         for (Entity entity : src.getEntities()) {
-            entities.add(
-                entity instanceof Player ?
-                    context.serialize(entity, Player.class) :
-                    context.serialize(entity, Entity.class)
-            );
+            entities.add(context.serialize(entity, entity.getClass()));
         }
 
         return result;

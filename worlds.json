@@ -14,7 +14,6 @@
           "attackDistance": 2.0,
           "visionRange": 20.0,
           "worldId": 0,
-          "id": 1,
           "agressive": true
         },
         {
@@ -27,7 +26,6 @@
           "attackDistance": 2.0,
           "visionRange": 20.0,
           "worldId": 0,
-          "id": 2,
           "agressive": false
         },
         {
@@ -41,7 +39,6 @@
           "attackDistance": 2.0,
           "visionRange": 20.0,
           "worldId": 0,
-          "id": 3,
           "agressive": false
         },
         {
@@ -54,7 +51,6 @@
           "attackDistance": 5.0,
           "visionRange": 30.0,
           "worldId": 0,
-          "id": 4,
           "agressive": true
         }
       ]

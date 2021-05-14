@@ -1,4 +1,4 @@
-package ru.lostman.world;
+package ru.lostman.dpm.world;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,11 +1,14 @@
-package ru.lostman.entity;
+package ru.lostman.dpm.entity;
 
-import ru.lostman.game.GameServer;
-import ru.lostman.world.World;
+import ru.lostman.dpm.game.GameServer;
+import ru.lostman.dpm.world.World;
 
 import java.util.List;
 
 public class Entity {
+    // final не сочетается с заданием id после insert
+    protected long id;
+
     protected String title = "UnknownEntity";
     protected double posX = 0.0;
     protected double posZ = 0.0;
@@ -18,25 +21,22 @@ public class Entity {
     protected int worldId = -1;
     protected transient World world = null;
 
-    protected static int idCounter = 1;
-    protected final long id = idCounter++;
-
     private boolean agressive;
 
     public Entity() {
     }
 
     public Entity(
-        String title,
-        double posX,
-        double posZ,
-        int health,
-        int maxHealth,
-        int attackDamage,
-        double attackDistance,
-        double visionRange,
-        boolean agressive,
-        World world
+            String title,
+            double posX,
+            double posZ,
+            int health,
+            int maxHealth,
+            int attackDamage,
+            double attackDistance,
+            double visionRange,
+            boolean agressive,
+            World world
     ) {
         this.title = title;
         this.posX = posX;
@@ -80,21 +80,20 @@ public class Entity {
     @Override
     public String toString() {
         return "Entity{" +
-            "title='" + title + '\'' +
-            ", posX=" + posX +
-            ", posZ=" + posZ +
-            ", health=" + health +
-            ", maxHealth=" + maxHealth +
-            ", attackDamage=" + attackDamage +
-            ", attackDistance=" + attackDistance +
-            ", visibilityRange=" + visionRange +
-            ", world=" + world.getTitle() +
-            ", worldId=" + worldId +
-            ", agressive=" + agressive +
-            '}';
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", posX=" + posX +
+                ", posZ=" + posZ +
+                ", health=" + health +
+                ", maxHealth=" + maxHealth +
+                ", attackDamage=" + attackDamage +
+                ", attackDistance=" + attackDistance +
+                ", visionRange=" + visionRange +
+                ", target=" + target +
+                ", world=" + world +
+                ", agressive=" + agressive +
+                '}';
     }
-
-    // ----------------------------------------------------------------------------------------------------
 
     public void attack(Entity target) {
         target.health -= this.attackDamage + 0.5 * GameServer.getInstance().getConfig().getDifficulty();
@@ -108,7 +107,12 @@ public class Entity {
         if (target.health <= 0) {
             String killer;
             if (this instanceof Player) {
-                killer = ((Player) this).getNickname();
+                Player thisAsPlayer = ((Player) this);
+                killer = thisAsPlayer.getNickname();
+                thisAsPlayer.setExperience(
+                        thisAsPlayer.getExperience() +
+                                GameServer.getInstance().getConfig().getDifficulty() * target.maxHealth
+                );
             } else {
                 killer = this.title;
             }
@@ -121,8 +125,8 @@ public class Entity {
             }
 
             System.out.printf(
-                "\n\n%s was slain by %s (%s has %d HP; server tick: %d)",
-                victim, killer, killer, this.health, GameServer.getInstance().getServerTick()
+                    "\n\n%s was slain by %s (%s has %d HP; server tick: %d)",
+                    victim, killer, killer, this.health, GameServer.getInstance().getServerTick()
             );
 
             this.target = null;
@@ -131,7 +135,7 @@ public class Entity {
 
     private Entity searchTarget() {
         List<Entity> sortedEntities =
-            World.getEntitiesNearEntity(this, this.world.getEntities());
+                World.getEntitiesNearEntity(this, this.world.getEntities());
 
         if (sortedEntities.size() < 1) {
             return null;
@@ -141,10 +145,10 @@ public class Entity {
     }
 
     public void update() {
-        if(this.world == null) {
+        if (this.world == null) {
             this.world = GameServer
-                .getInstance()
-                .getWorldById(worldId);
+                    .getInstance()
+                    .getWorldById(worldId);
 //            TODO worldId может остаться -1
         }
 
@@ -175,8 +179,6 @@ public class Entity {
             }
         }
     }
-
-    // ----------------------------------------------------------------------------------------------------
 
     public String getTitle() {
         return title;
@@ -216,6 +218,10 @@ public class Entity {
 
     public World getWorld() {
         return world;
+    }
+
+    public int getWorldId() {
+        return worldId;
     }
 
     public long getId() {
@@ -276,12 +282,18 @@ public class Entity {
         return setWorldId(world.getId());
     }
 
-    public static void setIdCounter(int idCounter) {
-        Entity.idCounter = idCounter;
-    }
-
     public Entity setAgressive(boolean agressive) {
         this.agressive = agressive;
+        return this;
+    }
+
+    public Entity setTarget(Entity target) {
+        this.target = target;
+        return this;
+    }
+
+    public Entity setId(long id) {
+        this.id = id;
         return this;
     }
 }

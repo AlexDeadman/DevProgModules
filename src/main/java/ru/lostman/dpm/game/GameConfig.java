@@ -1,4 +1,4 @@
-package ru.lostman.game;
+package ru.lostman.dpm.game;
 
 public class GameConfig {
     private String ip = "127.0.0.1";

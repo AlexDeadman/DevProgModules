@@ -1,9 +1,9 @@
-package ru.lostman.game;
+package ru.lostman.dpm.game;
 
-import ru.lostman.FileUtils;
-import ru.lostman.entity.Entity;
-import ru.lostman.entity.Player;
-import ru.lostman.world.World;
+import ru.lostman.dpm.utils.FileUtils;
+import ru.lostman.dpm.entity.Entity;
+import ru.lostman.dpm.entity.Player;
+import ru.lostman.dpm.world.World;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,8 +34,7 @@ public class GameServer {
             .stream()
             .dropWhile(world -> world.getId() != worldId)
             .findFirst()
-            .get();
-//        TODO мир может быть не найден
+            .orElseThrow();
     }
 
     public void updateServer() {
@@ -85,6 +84,7 @@ public class GameServer {
     }
 
     public void startGame(int tickQuantity, String resultPath) throws IOException {
+
         for (int i = 0; i <= tickQuantity; i++) {
             this.updateServer();
             if (i % this.config.getSavePeriod() == 0) {

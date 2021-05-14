@@ -1,12 +1,12 @@
-package ru.lostman;
+package ru.lostman.dpm.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import ru.lostman.game.GameConfig;
-import ru.lostman.world.World;
-import ru.lostman.world.WorldDeserializer;
-import ru.lostman.world.WorldList;
-import ru.lostman.world.WorldSerializer;
+import ru.lostman.dpm.game.GameConfig;
+import ru.lostman.dpm.world.World;
+import ru.lostman.dpm.world.WorldDeserializer;
+import ru.lostman.dpm.world.WorldList;
+import ru.lostman.dpm.world.WorldSerializer;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -53,5 +53,13 @@ public abstract class FileUtils {
             .create();
         String jsonOutputConfig = gsonWriter.toJson(gameConfig);
         Files.writeString(Path.of(configPath), jsonOutputConfig);
+    }
+
+    public static List<String> loadDbDump(String dumpPath) {
+        try {
+            return List.of(Files.readString(Path.of(dumpPath)).split(";"));
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

@@ -1,6 +1,6 @@
-package ru.lostman.world;
+package ru.lostman.dpm.world;
 
-import ru.lostman.entity.Entity;
+import ru.lostman.dpm.entity.Entity;
 
 import java.util.*;
 import java.util.function.Function;
