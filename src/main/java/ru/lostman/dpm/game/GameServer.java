@@ -1,5 +1,6 @@
 package ru.lostman.dpm.game;
 
+import ru.lostman.dpm.utils.DatabaseUtils;
 import ru.lostman.dpm.utils.FileUtils;
 import ru.lostman.dpm.entity.Entity;
 import ru.lostman.dpm.entity.Player;
@@ -8,6 +9,7 @@ import ru.lostman.dpm.world.World;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class GameServer {
     private static GameServer instance;
@@ -22,24 +24,22 @@ public class GameServer {
     @Override
     public String toString() {
         return "GameServer{" +
-            "worlds=" + worlds +
-            ", config=" + config +
-            '}';
+                "worlds=" + worlds +
+                ", config=" + config +
+                '}';
     }
-
-// ----------------------------------------------------------------------------------------------------
 
     public World getWorldById(int worldId) {
         return this.worlds
-            .stream()
-            .dropWhile(world -> world.getId() != worldId)
-            .findFirst()
-            .orElseThrow();
+                .stream()
+                .dropWhile(world -> world.getId() != worldId)
+                .findFirst()
+                .orElseThrow();
     }
 
     public void updateServer() {
         if (this.serverTick == 1) {
-            System.out.print("Game was started");
+            System.out.print("Game was start");
         }
         System.out.print(". ");
 
@@ -56,34 +56,45 @@ public class GameServer {
     public void printEntities() {
         for (World world : worlds) {
             System.out.print(
-                """
+                    """
 
 
-                --------------------------------------------------------------------------------------
-                |  ID  |       Title       |   Health   |   Position  X ; Z   |       Nickname       |
-                |----- + ----------------- + ---------- + ------------------- + ---------------------|
-                """
+                    ----------------------------------------------------------------------------------------------
+                    |  ID  |       Title       |   Health   |   Position  X ; Z   |       Nickname       |  Exp  |
+                    |----- + ----------------- + ---------- + ------------------- + -------------------- + ------|
+                    """
             );
 
             for (Entity entity : world.getEntities()) {
                 System.out.printf("| %-4d | %-17s | %-10d | %-9.2f;%9.2f ",
-                    entity.getId(),
-                    entity.getTitle(),
-                    entity.getHealth(),
-                    entity.getPosX(),
-                    entity.getPosZ()
+                        entity.getId(),
+                        entity.getTitle(),
+                        entity.getHealth(),
+                        entity.getPosX(),
+                        entity.getPosZ()
                 );
                 if (entity instanceof Player) {
-                    System.out.printf("| %-20s |\n", ((Player) entity).getNickname());
+                    Player asPlayer = ((Player) entity);
+                    System.out.printf("| %-20s | %-5.1f |\n", asPlayer.getNickname(), asPlayer.getExperience());
                 } else {
-                    System.out.print("|                      |\n");
+                    System.out.print("|                      |       |\n");
                 }
             }
-            System.out.println("--------------------------------------------------------------------------------------\n");
+            System.out.println(
+                    "----------------------------------------------------------------------------------------------\n");
         }
     }
 
     public void startGame(int tickQuantity, String resultPath) throws IOException {
+
+//        TODO
+//        worlds.forEach(
+//                world -> world
+//                        .getEntities()
+//                        .forEach(
+//                                entity -> DatabaseUtils.insertEntity()
+//                        )
+//        );
 
         for (int i = 0; i <= tickQuantity; i++) {
             this.updateServer();
@@ -92,8 +103,6 @@ public class GameServer {
             }
         }
     }
-
-    // ----------------------------------------------------------------------------------------------------
 
     public static GameServer getInstance() {
         return instance;

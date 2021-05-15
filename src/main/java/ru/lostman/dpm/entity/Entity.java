@@ -107,10 +107,10 @@ public class Entity {
         if (target.health <= 0) {
             String killer;
             if (this instanceof Player) {
-                Player thisAsPlayer = ((Player) this);
-                killer = thisAsPlayer.getNickname();
-                thisAsPlayer.setExperience(
-                        thisAsPlayer.getExperience() +
+                Player asPlayer = ((Player) this);
+                killer = asPlayer.getNickname();
+                asPlayer.setExperience(
+                        asPlayer.getExperience() +
                                 GameServer.getInstance().getConfig().getDifficulty() * target.maxHealth
                 );
             } else {

@@ -66,8 +66,6 @@ public class Player extends Entity {
         this.experience = experience;
     }
 
-    // ----------------------------------------------------------------------------------------------------
-
     @Override
     public void update() {
         super.update();
@@ -82,8 +80,6 @@ public class Player extends Entity {
             this.experience += 10.0 * instance.getConfig().getDifficulty();
         }
     }
-
-    // ----------------------------------------------------------------------------------------------------
 
     public String getNickname() {
         return nickname;

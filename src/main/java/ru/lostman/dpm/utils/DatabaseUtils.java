@@ -3,8 +3,6 @@ package ru.lostman.dpm.utils;
 import ru.lostman.dpm.entity.Entity;
 
 import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public abstract class DatabaseUtils {

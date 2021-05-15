@@ -28,8 +28,6 @@ public class World {
             '}';
     }
 
-    // ----------------------------------------------------------------------------------------------------
-
     public void update() {
         entities.forEach(Entity::update);
         entities.removeIf(ent -> ent.getHealth() <= 0);
@@ -61,8 +59,6 @@ public class World {
             .filter(ent -> !ent.equals(entity))
             .collect(Collectors.toList());
     }
-
-    // ----------------------------------------------------------------------------------------------------
 
     public int getId() {
         return id;
