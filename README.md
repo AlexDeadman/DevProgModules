@@ -9,3 +9,5 @@ Lab assignments for college.
 - Algorithm for finding a target for an attack was changed.
 ## Lab assigment #3
 - Worlds serialization and game config
+## Lab assigment #4
+- Conntection to database
