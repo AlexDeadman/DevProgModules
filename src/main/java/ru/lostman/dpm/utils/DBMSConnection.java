@@ -1,17 +1,28 @@
 package ru.lostman.dpm.utils;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
+import ru.lostman.dpm.game.GameConfig;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DBMSConnection {
-    private final String address;
-    private final int port;
-    private final String user;
-    private final String password;
+    private String address = "127.0.0.1";
+    private int port = 3306;
+    private String user = "root";
+    private String password = "";
 
     private MysqlDataSource source;
+
+    public DBMSConnection() {
+    }
+
+    public DBMSConnection(GameConfig config) {
+        this.address = config.getDbAddress();
+        this.port = config.getDbPort();
+        this.user = config.getDbUsername();
+        this.password = config.getDbPassword();
+    }
 
     public DBMSConnection(
             String address,
@@ -52,5 +63,41 @@ public class DBMSConnection {
         }
 
         return source.getConnection();
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public DBMSConnection setAddress(String address) {
+        this.address = address;
+        return this;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public DBMSConnection setPort(int port) {
+        this.port = port;
+        return this;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public DBMSConnection setUser(String user) {
+        this.user = user;
+        return this;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public DBMSConnection setPassword(String password) {
+        this.password = password;
+        return this;
     }
 }

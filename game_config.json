@@ -1,7 +1,11 @@
 {
-  "ip": "192.168.0.10",
-  "port": 34561,
+  "serverIp": "127.0.0.1",
+  "serverPort": 25655,
   "difficulty": 1,
   "tickDelay": 500,
-  "savePeriod": 5
+  "savePeriod": 5,
+  "dbAddress": "127.0.0.1",
+  "dbPort": 3306,
+  "dbUsername": "root",
+  "dbPassword": "qwerty"
 }

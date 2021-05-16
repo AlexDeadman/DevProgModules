@@ -2,6 +2,7 @@ package ru.lostman.dpm.world;
 
 import ru.lostman.dpm.entity.Entity;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -28,8 +29,10 @@ public class World {
             '}';
     }
 
-    public void update() {
-        entities.forEach(Entity::update);
+    public void update() throws SQLException {
+        for (Entity entity : entities) {
+            entity.update();
+        }
         entities.removeIf(ent -> ent.getHealth() <= 0);
     }
 

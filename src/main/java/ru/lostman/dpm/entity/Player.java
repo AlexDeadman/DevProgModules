@@ -1,7 +1,10 @@
 package ru.lostman.dpm.entity;
 
 import ru.lostman.dpm.game.GameServer;
+import ru.lostman.dpm.utils.DatabaseUtils;
 import ru.lostman.dpm.world.World;
+
+import java.sql.SQLException;
 
 public class Player extends Entity {
     private String nickname = "UnknownPlayer";
@@ -67,17 +70,18 @@ public class Player extends Entity {
     }
 
     @Override
-    public void update() {
+    public void update() throws SQLException {
         super.update();
-        GameServer instance = GameServer.getInstance();
+        GameServer gameInstance = GameServer.getInstance();
 
-        if (instance.getServerTick() % 2 == 0) {
+        if (gameInstance.getServerTick() % 2 == 0) {
             if (this.health < this.maxHealth) {
                 this.health++;
             }
         }
-        if (instance.getServerTick() % 5 == 0) {
-            this.experience += 10.0 * instance.getConfig().getDifficulty();
+        if (gameInstance.getServerTick() % 5 == 0) {
+            this.experience += 10.0 * gameInstance.getConfig().getDifficulty();
+            DatabaseUtils.updatePlayerExp(gameInstance.getDbmsConnection(), this);
         }
     }
 

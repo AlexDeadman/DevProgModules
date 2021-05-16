@@ -1,7 +1,9 @@
-CREATE DATABASE IF NOT EXISTS `dpm`;
+DROP DATABASE IF EXISTS `dpm`;
+CREATE DATABASE `dpm`;
 USE `dpm`;
 
-CREATE TABLE IF NOT EXISTS `entities`
+DROP TABLE IF EXISTS `entities`;
+CREATE TABLE `entities`
 (
     `id`              bigint      NOT NULL AUTO_INCREMENT,
     `title`           varchar(30) NOT NULL,
@@ -10,7 +12,8 @@ CREATE TABLE IF NOT EXISTS `entities`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `players`
+DROP TABLE IF EXISTS `players`;
+CREATE TABLE `players`
 (
     `id`       bigint NOT NULL,
     `nickname` varchar(30) DEFAULT NULL,
@@ -19,7 +22,8 @@ CREATE TABLE IF NOT EXISTS `players`
     CONSTRAINT `players_entities_id_fk` FOREIGN KEY (`id`) REFERENCES `entities` (`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `battle_logs`
+DROP TABLE IF EXISTS `battle_logs`;
+CREATE TABLE `battle_logs`
 (
     `log_id`        bigint NOT NULL AUTO_INCREMENT,
     `killer_id`     bigint   DEFAULT NULL,

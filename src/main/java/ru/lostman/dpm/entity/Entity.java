@@ -1,13 +1,15 @@
 package ru.lostman.dpm.entity;
 
 import ru.lostman.dpm.game.GameServer;
+import ru.lostman.dpm.utils.DatabaseUtils;
 import ru.lostman.dpm.world.World;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class Entity {
     // final не сочетается с заданием id после insert
-    protected long id;
+    protected transient long id;
 
     protected String title = "UnknownEntity";
     protected double posX = 0.0;
@@ -95,8 +97,10 @@ public class Entity {
                 '}';
     }
 
-    public void attack(Entity target) {
-        target.health -= this.attackDamage + 0.5 * GameServer.getInstance().getConfig().getDifficulty();
+    public void attack(Entity target) throws SQLException {
+        GameServer gameInstance = GameServer.getInstance();
+
+        target.health -= this.attackDamage + 0.5 * gameInstance.getConfig().getDifficulty();
 
         if (target instanceof Player) {
             if (target.health > 0) {
@@ -111,7 +115,11 @@ public class Entity {
                 killer = asPlayer.getNickname();
                 asPlayer.setExperience(
                         asPlayer.getExperience() +
-                                GameServer.getInstance().getConfig().getDifficulty() * target.maxHealth
+                                gameInstance.getConfig().getDifficulty() * target.maxHealth
+                );
+                DatabaseUtils.updatePlayerExp(
+                        gameInstance.getDbmsConnection(),
+                        asPlayer
                 );
             } else {
                 killer = this.title;
@@ -126,7 +134,18 @@ public class Entity {
 
             System.out.printf(
                     "\n\n%s was slain by %s (%s has %d HP; server tick: %d)",
-                    victim, killer, killer, this.health, GameServer.getInstance().getServerTick()
+                    victim, killer, killer, this.health, gameInstance.getServerTick()
+            );
+
+            DatabaseUtils.updateEntityDeath(
+                    gameInstance.getDbmsConnection(),
+                    target
+            );
+
+            DatabaseUtils.insertBattleLog(
+                    gameInstance.getDbmsConnection(),
+                    this,
+                    target
             );
 
             this.target = null;
@@ -144,12 +163,11 @@ public class Entity {
         }
     }
 
-    public void update() {
+    public void update() throws SQLException {
         if (this.world == null) {
             this.world = GameServer
                     .getInstance()
                     .getWorldById(worldId);
-//            TODO worldId может остаться -1
         }
 
         if (this.agressive) {

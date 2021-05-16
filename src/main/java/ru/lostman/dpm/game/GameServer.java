@@ -1,5 +1,6 @@
 package ru.lostman.dpm.game;
 
+import ru.lostman.dpm.utils.DBMSConnection;
 import ru.lostman.dpm.utils.DatabaseUtils;
 import ru.lostman.dpm.utils.FileUtils;
 import ru.lostman.dpm.entity.Entity;
@@ -7,15 +8,16 @@ import ru.lostman.dpm.entity.Player;
 import ru.lostman.dpm.world.World;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class GameServer {
     private static GameServer instance;
     private List<World> worlds = new ArrayList<>();
     private GameConfig config = new GameConfig();
     private int serverTick = 1;
+    private DBMSConnection dbmsConnection = new DBMSConnection(config);
 
     public GameServer() {
         instance = this;
@@ -35,15 +37,18 @@ public class GameServer {
                 .dropWhile(world -> world.getId() != worldId)
                 .findFirst()
                 .orElseThrow();
+        // при желании исключение можно обработать иначе
     }
 
-    public void updateServer() {
+    public void updateServer() throws SQLException {
         if (this.serverTick == 1) {
             System.out.print("Game was start");
         }
         System.out.print(". ");
 
-        worlds.forEach(World::update);
+        for (World world : worlds) {
+            world.update();
+        }
 
         try {
             Thread.sleep(this.config.getTickDelay());
@@ -55,13 +60,12 @@ public class GameServer {
 
     public void printEntities() {
         for (World world : worlds) {
-            System.out.print(
-                    """
+            System.out.print("""
 
 
-                    ----------------------------------------------------------------------------------------------
-                    |  ID  |       Title       |   Health   |   Position  X ; Z   |       Nickname       |  Exp  |
-                    |----- + ----------------- + ---------- + ------------------- + -------------------- + ------|
+                    --------------------------------------------------------------------------------------------------
+                    |  ID  |       Title       |   Health   |   Position  X ; Z   |       Nickname       |    Exp    |
+                    |----- + ----------------- + ---------- + ------------------- + -------------------- + ----------|
                     """
             );
 
@@ -75,26 +79,35 @@ public class GameServer {
                 );
                 if (entity instanceof Player) {
                     Player asPlayer = ((Player) entity);
-                    System.out.printf("| %-20s | %-5.1f |\n", asPlayer.getNickname(), asPlayer.getExperience());
+                    System.out.printf("| %-20s | %-9.1f |\n", asPlayer.getNickname(), asPlayer.getExperience());
                 } else {
-                    System.out.print("|                      |       |\n");
+                    System.out.print("|                      |           |\n");
                 }
             }
             System.out.println(
-                    "----------------------------------------------------------------------------------------------\n");
+                    "--------------------------------------------------------------------------------------------------\n");
         }
     }
 
-    public void startGame(int tickQuantity, String resultPath) throws IOException {
+    public void startGame(int tickQuantity, String resultPath) throws IOException, SQLException {
+        DatabaseUtils.restoreDatabase(dbmsConnection, "db_dump.sql");
 
-//        TODO
-//        worlds.forEach(
-//                world -> world
-//                        .getEntities()
-//                        .forEach(
-//                                entity -> DatabaseUtils.insertEntity()
-//                        )
-//        );
+        worlds.forEach(
+                world -> world.getEntities().forEach(
+                        entity -> {
+                            try {
+                                DatabaseUtils.insertEntity(dbmsConnection, entity);
+                                if (entity instanceof Player) {
+                                    DatabaseUtils.insertPlayer(dbmsConnection, (Player) entity);
+                                }
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                )
+        );
+
+        printEntities();
 
         for (int i = 0; i <= tickQuantity; i++) {
             this.updateServer();
@@ -102,6 +115,8 @@ public class GameServer {
                 FileUtils.saveWorlds(resultPath, this.worlds);
             }
         }
+
+        printEntities();
     }
 
     public static GameServer getInstance() {
@@ -120,6 +135,10 @@ public class GameServer {
         return serverTick;
     }
 
+    public DBMSConnection getDbmsConnection() {
+        return dbmsConnection;
+    }
+
     public GameServer setWorlds(List<World> worlds) {
         this.worlds = worlds;
         return this;
@@ -127,6 +146,11 @@ public class GameServer {
 
     public GameServer setConfig(GameConfig config) {
         this.config = config;
+        return this;
+    }
+
+    public GameServer setDbmsConnection(DBMSConnection dbmsConnection) {
+        this.dbmsConnection = dbmsConnection;
         return this;
     }
 }
